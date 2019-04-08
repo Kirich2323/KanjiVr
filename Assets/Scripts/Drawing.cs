@@ -51,7 +51,7 @@ public class Drawing : MonoBehaviour {
 
         //Zinnia
         recognizer = Zinnia.zinnia_recognizer_new();
-        Zinnia.zinnia_recognizer_open(recognizer, Encoding.ASCII.GetBytes(Application.dataPath + @"\Resources\zinniadata\handwriting-ja.model")); //todo: propper path
+        Zinnia.zinnia_recognizer_open(recognizer, Encoding.ASCII.GetBytes(@"./Assets/Resources/zinniadata/handwriting-ja.model")); //todo: propper path
         zinniaCharacter = Zinnia.zinnia_character_new();
         //Zinnie
     }
@@ -72,9 +72,9 @@ public class Drawing : MonoBehaviour {
 
     void Update() {
 
-        /*if (transform.position == lastPos) {
+        if (transform.position == lastPos) {
             return;
-        }*/
+        }
 
         if (controllerEvents.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress)) {
 
@@ -82,7 +82,6 @@ public class Drawing : MonoBehaviour {
             currentLine.positionCount = numVertices + 1; //?
             currentLine.SetPosition(numVertices, transform.position);
             numVertices++;
-
 
             if (forward == null || right == null) {
                 forward = transform.forward;
@@ -103,7 +102,7 @@ public class Drawing : MonoBehaviour {
             const float scale = 500;
             currentPoints.Add(new List<float>() { scale * a, -scale * b });
 
-            Debug.Log("pressed");
+            //Debug.Log("pressed");
         }
         else {
             //Debug.Log("Not pressed");
@@ -133,7 +132,8 @@ public class Drawing : MonoBehaviour {
         int margin = 50;
 
         //var recognized = TesseractRegonize(margin);
-        var recognized = ZinniaRecognize(margin);
+        var recognized = "";
+        //recognized = ZinniaRecognize(margin);
         recognized += "tesseract: " + TesseractRegonize(margin);
 
         displayText.text = recognized;
@@ -260,5 +260,10 @@ public class Drawing : MonoBehaviour {
     void OnDestroy() {
         Zinnia.zinnia_character_destroy(zinniaCharacter);
         Zinnia.zinnia_recognizer_destroy(recognizer);
+    }
+
+    void OnApplicationQuit() {
+        //Zinnia.zinnia_character_destroy(zinniaCharacter);
+        //Zinnia.zinnia_recognizer_destroy(recognizer);
     }
 }

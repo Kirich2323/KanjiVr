@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
-public class Zinnia {
+public class Zinnia : MonoBehaviour {
 
     // Character
     [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]

@@ -8,6 +8,8 @@ using System;
 public class DrawAnimatedKanji {
     private string kanjiData = "Assets/Resources/zinniadata/handwriting-ja.xml"; //todo: propper path
 
+    Dictionary<string, KanjiLines> dict;
+
     public DrawAnimatedKanji() {
         Debug.Log("Constructor");
         XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
@@ -15,8 +17,7 @@ public class DrawAnimatedKanji {
         xmlDoc.Load(kanjiData);
         var kanjis = xmlDoc.GetElementsByTagName("character");
 
-
-        var dict = new Dictionary<string, KanjiLines>();
+        dict = new Dictionary<string, KanjiLines>();
         int c = 0;
         int collisions = 0;
         foreach (XmlNode kanjiXml in kanjis) {
@@ -37,14 +38,11 @@ public class DrawAnimatedKanji {
                         var line = new KanjiLine();
                         foreach (XmlNode point in stroke.ChildNodes) {
                             if (point.Name != "point") continue;
-                            var x = int.Parse(point.Attributes["x"].Value);
-                            var y = int.Parse(point.Attributes["y"].Value);
-                            //Debug.Log(point.Attributes["x"].Value + "   " + point.Attributes["y"].Value);
-                            line.addPoint(x, y);
+                            line.AddPoint(int.Parse(point.Attributes["x"].Value),
+                                          int.Parse(point.Attributes["y"].Value));
                         }
-                        lines.addLine(line);
+                        lines.AddLine(line);
                     }
-                    
                 }
             }
 
@@ -59,8 +57,39 @@ public class DrawAnimatedKanji {
     }
     
 
-    GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji) {
-        return new GameObject();
+    public GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji) {
+        var go = new GameObject();
+
+        go.transform.position = location;
+
+        List<LineRenderer> lineRederers = new List<LineRenderer>();
+        if (!dict.ContainsKey(kanji)) {
+            Debug.Log("Pepega");
+            return null;
+        }
+        var lines = dict[kanji];
+        var scale = 0.002f;
+        for (var i = 0; i < lines.Count(); ++i) {
+            var ngo = new GameObject();
+            ngo.transform.parent = go.transform;
+            lineRederers.Add(ngo.AddComponent<LineRenderer>());
+            var line = lineRederers[lineRederers.Count - 1];
+            line.startWidth = .02f;
+            line.endWidth = .02f;
+            line.material.SetFloat("_Glossiness", 0.0f);
+            line.material.color = UnityEngine.Color.red;
+            line.positionCount = lines.GetLine(i).Count();
+
+            for (var j = 0; j < lines.GetLine(i).Count(); ++j) {
+                var point = scale*lines.GetLine(i).GetPoint(j);
+                var pointPos = go.transform.position;
+                pointPos.x += point.x;
+                pointPos.y -= point.y;
+                line.SetPosition(j, pointPos);
+            }
+        }
+
+        return go;
     }
 
 }

@@ -8,9 +8,13 @@ public class KanjiLines {
         lines = new List<KanjiLine>();
     }
 
-    public void addLine(KanjiLine line) {
+    public void AddLine(KanjiLine line) {
         lines.Add(line);
     }
+
+    public int Count() { return lines.Count; }
+
+    public KanjiLine GetLine(int idx) { return lines[idx]; }
 
     private List<KanjiLine> lines; 
 }

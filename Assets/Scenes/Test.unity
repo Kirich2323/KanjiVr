@@ -1510,7 +1510,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 401426, guid: 8ef3bf3f5dc59c94aa446cfcca13a140, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.72
+      value: 1.84
       objectReference: {fileID: 0}
     - target: {fileID: 401426, guid: 8ef3bf3f5dc59c94aa446cfcca13a140, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2727,8 +2727,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 25
+    m_Font: {fileID: 12800000, guid: 68fcdb038ae2cdd4aa9657b0cade287a, type: 3}
+    m_FontSize: 30
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
@@ -3946,7 +3946,7 @@ Transform:
   - {fileID: 473895940}
   - {fileID: 855566223}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1874091939
 GameObject:
