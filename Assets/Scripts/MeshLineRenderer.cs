@@ -10,8 +10,7 @@ class Point {
 
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
-public class MeshLineRenderer : MonoBehaviour
-{
+public class MeshLineRenderer : MonoBehaviour {
 
     public Material lmat;
 
@@ -23,21 +22,17 @@ public class MeshLineRenderer : MonoBehaviour
 
     private bool firstQuad = true;
 
-    void Start()
-    {
+    void Start() {
         ml = GetComponent<MeshFilter>().mesh;
         GetComponent<MeshRenderer>().material = lmat;
     }
 
-    public void setWidth(float width)
-    {
+    public void setWidth(float width) {
         lineSize = width;
     }
 
-    public void AddPoint(Vector3 point)
-    {
-        if (s != Vector3.zero)
-        {
+    public void AddPoint(Vector3 point) {
+        if (s != Vector3.zero) {
             AddLine(ml, MakeQuad(s, point, lineSize, firstQuad));
             firstQuad = false;
         }
@@ -45,17 +40,14 @@ public class MeshLineRenderer : MonoBehaviour
         s = point;
     }
 
-    Vector3[] MakeQuad(Vector3 s, Vector3 e, float w, bool all)
-    {
+    Vector3[] MakeQuad(Vector3 s, Vector3 e, float w, bool all) {
         w = w / 2;
 
         Vector3[] q;
-        if (all)
-        {
+        if (all) {
             q = new Vector3[4];
         }
-        else
-        {
+        else {
             q = new Vector3[2];
         }
 
@@ -63,30 +55,26 @@ public class MeshLineRenderer : MonoBehaviour
         Vector3 l = Vector3.Cross(n, e - s);
         l.Normalize();
 
-        if (all)
-        {
+        if (all) {
             q[0] = transform.InverseTransformPoint(s + l * w);
             q[1] = transform.InverseTransformPoint(s + l * -w);
             q[2] = transform.InverseTransformPoint(e + l * w);
             q[3] = transform.InverseTransformPoint(e + l * -w);
         }
-        else
-        {
+        else {
             q[0] = transform.InverseTransformPoint(s + l * w);
             q[1] = transform.InverseTransformPoint(s + l * -w);
         }
         return q;
     }
 
-    void AddLine(Mesh m, Vector3[] quad)
-    {
+    void AddLine(Mesh m, Vector3[] quad) {
         int vl = m.vertices.Length;
 
         Vector3[] vs = m.vertices;
         vs = resizeVertices(vs, 2 * quad.Length);
 
-        for (int i = 0; i < 2 * quad.Length; i += 2)
-        {
+        for (int i = 0; i < 2 * quad.Length; i += 2) {
             vs[vl + i] = quad[i / 2];
             vs[vl + i + 1] = quad[i / 2];
         }
@@ -94,8 +82,7 @@ public class MeshLineRenderer : MonoBehaviour
         Vector2[] uvs = m.uv;
         uvs = resizeUVs(uvs, 2 * quad.Length);
 
-        if (quad.Length == 4)
-        {
+        if (quad.Length == 4) {
             uvs[vl] = Vector2.zero;
             uvs[vl + 1] = Vector2.zero;
             uvs[vl + 2] = Vector2.right;
@@ -105,18 +92,15 @@ public class MeshLineRenderer : MonoBehaviour
             uvs[vl + 6] = Vector2.one;
             uvs[vl + 7] = Vector2.one;
         }
-        else
-        {
-            if (vl % 8 == 0)
-            {
+        else {
+            if (vl % 8 == 0) {
                 uvs[vl] = Vector2.zero;
                 uvs[vl + 1] = Vector2.zero;
                 uvs[vl + 2] = Vector2.right;
                 uvs[vl + 3] = Vector2.right;
 
             }
-            else
-            {
+            else {
                 uvs[vl] = Vector2.up;
                 uvs[vl + 1] = Vector2.up;
                 uvs[vl + 2] = Vector2.one;
@@ -129,8 +113,7 @@ public class MeshLineRenderer : MonoBehaviour
         int[] ts = m.triangles;
         ts = resizeTriangles(ts, 12);
 
-        if (quad.Length == 2)
-        {
+        if (quad.Length == 2) {
             vl -= 4;
         }
 
@@ -159,33 +142,27 @@ public class MeshLineRenderer : MonoBehaviour
         m.RecalculateNormals();
     }
 
-    Vector3[] resizeVertices(Vector3[] ovs, int ns)
-    {
+    Vector3[] resizeVertices(Vector3[] ovs, int ns) {
         Vector3[] nvs = new Vector3[ovs.Length + ns];
-        for (int i = 0; i < ovs.Length; i++)
-        {
+        for (int i = 0; i < ovs.Length; i++) {
             nvs[i] = ovs[i];
         }
 
         return nvs;
     }
 
-    Vector2[] resizeUVs(Vector2[] uvs, int ns)
-    {
+    Vector2[] resizeUVs(Vector2[] uvs, int ns) {
         Vector2[] nvs = new Vector2[uvs.Length + ns];
-        for (int i = 0; i < uvs.Length; i++)
-        {
+        for (int i = 0; i < uvs.Length; i++) {
             nvs[i] = uvs[i];
         }
 
         return nvs;
     }
 
-    int[] resizeTriangles(int[] ovs, int ns)
-    {
+    int[] resizeTriangles(int[] ovs, int ns) {
         int[] nvs = new int[ovs.Length + ns];
-        for (int i = 0; i < ovs.Length; i++)
-        {
+        for (int i = 0; i < ovs.Length; i++) {
             nvs[i] = ovs[i];
         }
 

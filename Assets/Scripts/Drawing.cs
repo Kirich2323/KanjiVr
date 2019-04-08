@@ -41,7 +41,7 @@ public class Drawing : MonoBehaviour {
         controllerEvents.TriggerReleased += DoTriggerReleased;
         controllerEvents.GripPressed += DoGripPressed;
 
-        zinnia_version();
+        //zinnia_version();
 
         lines = new List<List<List<float>>>();
         currentPoints = new List<List<float>>();
@@ -50,9 +50,9 @@ public class Drawing : MonoBehaviour {
         engine = new TesseractEngine(@"./Assets/Resources/tessdata", "jpn", EngineMode.Default); //todo: propper path
 
         //Zinnia
-        recognizer = zinnia_recognizer_new();
-        zinnia_recognizer_open(recognizer, Encoding.ASCII.GetBytes(Application.dataPath+ @"\Resources\zinniadata\handwriting-ja.model")); //todo: propper path
-        zinniaCharacter = zinnia_character_new();
+        recognizer = Zinnia.zinnia_recognizer_new();
+        Zinnia.zinnia_recognizer_open(recognizer, Encoding.ASCII.GetBytes(Application.dataPath + @"\Resources\zinniadata\handwriting-ja.model")); //todo: propper path
+        zinniaCharacter = Zinnia.zinnia_character_new();
         //Zinnie
     }
 
@@ -70,11 +70,11 @@ public class Drawing : MonoBehaviour {
         return System.Text.Encoding.UTF8.GetString(array);
     }
 
-    void FixedUpdate() {
+    void Update() {
 
-        if (transform.position == lastPos) {
+        /*if (transform.position == lastPos) {
             return;
-        }
+        }*/
 
         if (controllerEvents.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerPress)) {
 
@@ -110,7 +110,6 @@ public class Drawing : MonoBehaviour {
             //Debug.Log(transform.position);
         }
         lastPos = transform.position;
-
     }
 
     private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e) {
@@ -135,7 +134,8 @@ public class Drawing : MonoBehaviour {
 
         //var recognized = TesseractRegonize(margin);
         var recognized = ZinniaRecognize(margin);
-        
+        recognized += "tesseract: " + TesseractRegonize(margin);
+
         displayText.text = recognized;
 
         for (int i = 0; i < currentLines.Count; ++i) {
@@ -194,7 +194,7 @@ public class Drawing : MonoBehaviour {
 
         Debug.Log("Total lines: " + lines.Count.ToString());
         for (int i = 0; i < lines.Count; ++i) {
-            Debug.Log("line " + i.ToString() + "   "  + lines[i].Count.ToString());
+            Debug.Log("line " + i.ToString() + "   " + lines[i].Count.ToString());
             for (int j = 0; j < lines[i].Count; ++j) {
                 Debug.Log(lines[i][j][0].ToString() + "  " + lines[i][j][1].ToString());
             }
@@ -209,7 +209,7 @@ public class Drawing : MonoBehaviour {
             }
         }
 
-        zinnia_character_clear(zinniaCharacter);
+        Zinnia.zinnia_character_clear(zinniaCharacter);
         float minX = 1e10f;
         float maxX = -1e10f;
         float minY = 1e10f;
@@ -240,73 +240,25 @@ public class Drawing : MonoBehaviour {
 
         for (int i = 0; i < lines.Count; ++i) {
             for (int j = 0; j < lines[i].Count; ++j) {
-                zinnia_character_add(zinniaCharacter, (uint)i, (int)(lines[i][j][0] - minX + margin), (int)(lines[i][j][1] - minY + margin)); //todo: maybe math.round
+                int x = (int)(lines[i][j][0] - minX + margin); //todo: maybe math.round
+                int y = (int)(lines[i][j][1] - minY + margin); //todo: maybe math.round
+                //Debug.Log(x.ToString() + "  " + y.ToString());
+                Zinnia.zinnia_character_add(zinniaCharacter, (uint)i, x, y);
             }
         }
 
         int topn = 5;
-        var result = zinnia_recognizer_classify(recognizer, zinniaCharacter, (uint)topn);
+        var result = Zinnia.zinnia_recognizer_classify(recognizer, zinniaCharacter, (uint)topn);
         string ans = "";
         for (int i = 0; i < topn; ++i) {
-            ans += PtrToStringUtf8(zinnia_result_value(result, (uint)i)) + " ";
+            ans += PtrToStringUtf8(Zinnia.zinnia_result_value(result, (uint)i)) + " ";
         }
-        zinnia_result_destroy(result);
+        Zinnia.zinnia_result_destroy(result);
         return ans;
     }
 
-
     void OnDestroy() {
-        zinnia_character_destroy(zinniaCharacter);
-        zinnia_recognizer_destroy(recognizer);
+        Zinnia.zinnia_character_destroy(zinniaCharacter);
+        Zinnia.zinnia_recognizer_destroy(recognizer);
     }
-
-    // Character
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static IntPtr zinnia_version();
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static IntPtr zinnia_character_new();
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static void zinnia_character_destroy(IntPtr character);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static int zinnia_character_add(IntPtr character, uint id, int x, int y);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static uint zinnia_character_width(IntPtr character);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static uint zinnia_character_height(IntPtr character);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static void zinnia_character_set_width(IntPtr character, uint width);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static void zinnia_character_set_height(IntPtr character, uint height);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static void zinnia_character_clear(IntPtr character);
-
-
-    // Result
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static IntPtr zinnia_result_value(IntPtr result, uint i);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static void zinnia_result_destroy(IntPtr result);
-
-
-    //Recognizer
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static IntPtr zinnia_recognizer_new();
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static void zinnia_recognizer_destroy(IntPtr recognizer);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static IntPtr zinnia_recognizer_open(IntPtr recognizer, byte[] filename);
-
-    [DllImport("libzinnia.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-    private extern static IntPtr zinnia_recognizer_classify(IntPtr recognizer, IntPtr character, uint nbest);
 }
