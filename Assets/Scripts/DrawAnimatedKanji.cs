@@ -6,21 +6,21 @@ using System;
 //using System.Xml.Serialization;
 
 public class DrawAnimatedKanji {
-    private string kanjiData = "Assets/Resources/zinniadata/handwriting-ja.xml"; //todo: propper path
+    private string kanjiDataPath = "Assets/Resources/zinniadata/handwriting-ja.xml"; //todo: propper path
 
-    Dictionary<string, KanjiLines> dict;
+    Dictionary<string, KanjiLines> kanjiToLines;
 
     public DrawAnimatedKanji() {
         Debug.Log("Constructor");
         XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
         //xmlDoc.LoadXml(kanjiData); // load the file.
-        xmlDoc.Load(kanjiData);
-        var kanjis = xmlDoc.GetElementsByTagName("character");
+        xmlDoc.Load(kanjiDataPath);
+        var kanjiData = xmlDoc.GetElementsByTagName("character");
 
-        dict = new Dictionary<string, KanjiLines>();
+        kanjiToLines = new Dictionary<string, KanjiLines>();
         int c = 0;
         int collisions = 0;
-        foreach (XmlNode kanjiXml in kanjis) {
+        foreach (XmlNode kanjiXml in kanjiData) {
             Debug.Log(c);
             c++;
             var lines = new KanjiLines();
@@ -46,8 +46,8 @@ public class DrawAnimatedKanji {
                 }
             }
 
-            if (!dict.ContainsKey(kanjiChar)) {
-                dict.Add(kanjiChar, lines);
+            if (!kanjiToLines.ContainsKey(kanjiChar)) {
+                kanjiToLines.Add(kanjiChar, lines);
             }
             else {
                 collisions++;
@@ -63,19 +63,19 @@ public class DrawAnimatedKanji {
         go.transform.position = location;
 
         List<LineRenderer> lineRederers = new List<LineRenderer>();
-        if (!dict.ContainsKey(kanji)) {
-            Debug.Log("Pepega");
+        if (!kanjiToLines.ContainsKey(kanji)) {
             return null;
         }
-        var lines = dict[kanji];
+
+        var lines = kanjiToLines[kanji];
         var scale = 0.002f;
         for (var i = 0; i < lines.Count(); ++i) {
             var ngo = new GameObject();
             ngo.transform.parent = go.transform;
             lineRederers.Add(ngo.AddComponent<LineRenderer>());
             var line = lineRederers[lineRederers.Count - 1];
-            line.startWidth = .02f;
-            line.endWidth = .02f;
+            line.startWidth = .06f;
+            line.endWidth = .06f;
             line.material.SetFloat("_Glossiness", 0.0f);
             line.material.color = UnityEngine.Color.red;
             line.positionCount = lines.GetLine(i).Count();
@@ -88,7 +88,7 @@ public class DrawAnimatedKanji {
                 line.SetPosition(j, pointPos);
             }
         }
-
+        go.transform.rotation = Quaternion.Euler(rotation);
         return go;
     }
 
