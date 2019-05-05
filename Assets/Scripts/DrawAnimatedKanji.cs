@@ -68,7 +68,7 @@ public class DrawAnimatedKanji {
         }
 
         var lines = kanjiToLines[kanji];
-        var scale = 0.002f;
+        var scale = 0.004f;
         for (var i = 0; i < lines.Count(); ++i) {
             var ngo = new GameObject();
             ngo.transform.parent = go.transform;
