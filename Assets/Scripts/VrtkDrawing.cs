@@ -59,9 +59,9 @@ public class VrtkDrawing : MonoBehaviour {
         drawingManager.ResetAllLines();
     }
 
-    private static float Normalize(float current, float min, float max) {
-        return (current - min) / (max - min);
-    }
+    //private static float Normalize(float current, float min, float max) {
+    //    return (current - min) / (max - min);
+    //}
 
     //string TesseractRegonize(int margin) {
     //    if (lines.Count < 1) {

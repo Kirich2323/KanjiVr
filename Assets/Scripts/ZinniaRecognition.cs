@@ -73,12 +73,13 @@ public class ZinniaRecognition  {
             }
         }
 
-        int topn = 5;
+        int topn = 1;
         var result = Zinnia.zinnia_recognizer_classify(recognizer, zinniaCharacter, (uint)topn);
         string ans = "";
         for (int i = 0; i < topn; ++i) {
             ans += PtrToStringUtf8(Zinnia.zinnia_result_value(result, (uint)i)) + " ";
         }
+
         Zinnia.zinnia_result_destroy(result);
         return ans;
     }

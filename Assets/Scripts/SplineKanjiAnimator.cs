@@ -149,7 +149,7 @@ public class SplineKanjiAnimator {
         }
     }
 
-    public GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji) {
+    public GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji, UnityEngine.Color color) {
         if (!kanjiToSplines.ContainsKey(kanji)) {
             return null;
         }
@@ -180,6 +180,7 @@ public class SplineKanjiAnimator {
             kanjiPaths.Add(splines);
         }
         kanjiObject.SetPaths(kanjiPaths);
+        kanjiObject.SetColor(color);
         kanjiObject.SetInitialized();
 
         go.transform.Rotate(rotation);// = Quaternion.Euler(rotation);

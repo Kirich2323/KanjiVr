@@ -63,10 +63,12 @@ public class DrawingManager {
         lineRenderer = lineObject.AddComponent<LineRenderer>();
 
         //Make it customizable
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.startWidth = .02f;
         lineRenderer.endWidth = .02f;
         lineRenderer.material.SetFloat("_Glossiness", 0.0f);
-        lineRenderer.material.color = UnityEngine.Color.red;
+        //lineRenderer.material.color = UnityEngine.Color.red;
+        lineRenderer.material.color = UnityEngine.Color.green;
         //
 
         numVertices = 0;
