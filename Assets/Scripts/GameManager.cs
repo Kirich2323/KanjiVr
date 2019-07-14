@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour {
     private DrawAnimatedKanji tmp;
     private SplineKanjiAnimator tmp2;
     void Start() {
-        tmp = new DrawAnimatedKanji();
-        tmp.SpawnAnimatedKanji(new Vector3(5, 7, 0), new Vector3(), "義");
+        //tmp = new DrawAnimatedKanji();
+        //tmp.SpawnAnimatedKanji(new Vector3(5, 7, 0), new Vector3(), "義");
 
         tmp2 = new SplineKanjiAnimator();
         //tmp2.SpawnAnimatedKanji(new Vector3(8f, 6, 43.79f), new Vector3(0, 90f, 0), "木", UnityEngine.Color.green);

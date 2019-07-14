@@ -46,13 +46,13 @@ public class SplineKanjiAnimator {
                                     var lc = prevCommand.command;
                                     if (lc == 'C' || lc == 'S') {
                                         var args = prevCommand.arguments;
-                                        a_x = x - args[args.Length - 1 - 3]; //todo ??
-                                        a_x = y - args[args.Length - 1 - 2]; //todo ??
+                                        a_x = x - args[args.Length - 1 - 3];
+                                        a_x = y - args[args.Length - 1 - 2];
                                     }
                                     else if (lc == 's' || lc == 'c') {
                                         var args = prevCommand.arguments;
-                                        a_x = x - ((x - args[args.Length - 2]) + args[args.Length - 1 - 3]); //todo ??
-                                        a_x = y - ((y - args[args.Length - 1]) + args[args.Length - 1 - 2]); //todo ??
+                                        a_x = x - ((x - args[args.Length - 2]) + args[args.Length - 1 - 3]);
+                                        a_x = y - ((y - args[args.Length - 1]) + args[args.Length - 1 - 2]);
                                     }
                                 }
                                 for (int i = 0; i < c.arguments.Length; i += 4) {
@@ -64,8 +64,8 @@ public class SplineKanjiAnimator {
                                                                     new Vector2(a_x, a_y),
                                                                     new Vector2(x + b_x, y + b_y),
                                                                     new Vector2(x + x_2, y + y_2)));
-                                    a_x = x_2 - (x + b_x); //todo ??
-                                    a_x = y_2 - (y + b_y); //todo ??
+                                    a_x = x_2 - (x + b_x);
+                                    a_x = y_2 - (y + b_y);
                                     x += x_2;
                                     y += y_2;
                                 }
@@ -158,23 +158,23 @@ public class SplineKanjiAnimator {
         var kanjiObject = go.AddComponent<KanjiObject>();
         kanjiObject.transform.parent = go.transform;
         go.transform.position = location;
-        List<LineRenderer> lineRederers = new List<LineRenderer>();
+        //List<LineRenderer> lineRederers = new List<LineRenderer>();
         var paths = kanjiToSplines[kanji];
-        var scale = 0.04f;
-        int MAX_SPLINE_POINTS = 50;
+        var scale = 0.04f; //todo move to somewhere else
+        //int MAX_SPLINE_POINTS = 50;
 
         List<List<List<Vector2>>> kanjiPaths = new List<List<List<Vector2>>>();
         foreach (var path in paths) {
             List<List<Vector2>> splines = new List<List<Vector2>>();
             foreach (var spline in path.Splines) {
                 List<Vector2> line = new List<Vector2>();
-                Debug.Log("Max points: " + KanjiObject.MAX_SPLINE_POINTS.ToString());
+                //Debug.Log("Max points: " + KanjiObject.MAX_SPLINE_POINTS.ToString());
                 for (int i = 0; i < KanjiObject.MAX_SPLINE_POINTS; ++i) {
                     float t = (float)i / (float)(KanjiObject.MAX_SPLINE_POINTS - 1);
                     var point = scale*CalculateCubicBezierPoint(t, spline.A, spline.B, spline.C, spline.D);
                     line.Add(point);
                 }
-                Debug.Log("Line from sender: " + line.Count.ToString());
+                //Debug.Log("Line from sender: " + line.Count.ToString());
                 splines.Add(line);
             }
             kanjiPaths.Add(splines);
@@ -200,16 +200,16 @@ public class SplineKanjiAnimator {
         return p;
     }
 
-    private System.IO.StreamWriter File;
+    //private System.IO.StreamWriter File;
 
-    private void ParseXmlNode(XmlNode node, ref SplinePath splinePath) {
-        foreach (XmlNode child in node) {
-            if (child.Name == "g") {
-                ParseXmlNode(child, ref splinePath);
-            }
-            else if (child.Name == "path") {
+    //private void ParseXmlNode(XmlNode node, ref SplinePath splinePath) {
+    //    foreach (XmlNode child in node) {
+    //        if (child.Name == "g") {
+    //            ParseXmlNode(child, ref splinePath);
+    //        }
+    //        else if (child.Name == "path") {
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //}
 }

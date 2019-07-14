@@ -5,6 +5,7 @@ using System.Xml;
 using System;
 //using System.Xml.Serialization;
 
+//depricated?
 public class DrawAnimatedKanji {
     private string kanjiDataPath = "Assets/Resources/zinniadata/handwriting-ja.xml"; //todo: propper path
 
@@ -21,7 +22,7 @@ public class DrawAnimatedKanji {
         int c = 0;
         int collisions = 0;
         foreach (XmlNode kanjiXml in kanjiData) {
-            Debug.Log(c);
+            //Debug.Log(c);
             c++;
             var lines = new KanjiLines();
             var kanjiChar = "";
