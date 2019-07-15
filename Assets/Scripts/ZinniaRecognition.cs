@@ -14,7 +14,7 @@ public class ZinniaRecognition  {
     public ZinniaRecognition() {
         recognizer = Zinnia.zinnia_recognizer_new();
         zinniaCharacter = Zinnia.zinnia_character_new();
-        Zinnia.zinnia_recognizer_open(recognizer, Encoding.ASCII.GetBytes("Assets\\Resources\\zinniadata\\handwriting-ja.model\0")); //todo: propper path
+        Zinnia.zinnia_recognizer_open(recognizer, Encoding.ASCII.GetBytes("Assets\\CustomResources\\zinniadata\\handwriting-ja.model\0")); //todo: propper path
     }
 
     public string Recognize(ref List<List<List<float>>> lines, int margin) {
@@ -61,8 +61,8 @@ public class ZinniaRecognition  {
         float width = maxX - minX + margin * 2;
         float height = maxY - minY + margin * 2;
 
-        //zinnia_character_set_width(zinniaCharacter, (uint)width);   //breaks recognition
-        //zinnia_character_set_height(zinniaCharacter, (uint)height); //breaks recognition
+        //Zinnia.zinnia_character_set_width(zinniaCharacter, (uint)width);   //breaks recognition
+        //Zinnia.zinnia_character_set_height(zinniaCharacter, (uint)height); //breaks recognition
 
         for (int i = 0; i < lines.Count; ++i) {
             for (int j = 0; j < lines[i].Count; ++j) {

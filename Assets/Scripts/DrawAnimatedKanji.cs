@@ -7,7 +7,7 @@ using System;
 
 //depricated?
 public class DrawAnimatedKanji {
-    private string kanjiDataPath = "Assets/Resources/zinniadata/handwriting-ja.xml"; //todo: propper path
+    private string kanjiDataPath = "Assets/CustomResources/zinniadata/handwriting-ja.xml"; //todo: propper path
 
     Dictionary<string, KanjiLines> kanjiToLines;
 

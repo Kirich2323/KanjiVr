@@ -19,6 +19,7 @@ public class KanjiObject : MonoBehaviour {
     private int currentDrawingPath = -1;
     private float currentPathTravelledDistance = 0.0f;
     private UnityEngine.Color color;
+    private float totalKanjiLength = 0.0f;
     // Start is called before the first frame update
     void Start() {
         lines = new List<LineRenderer>();
@@ -46,6 +47,7 @@ public class KanjiObject : MonoBehaviour {
                     line.material = new Material(Shader.Find("Sprites/Default"));
                     line.material.color = color;
                 }
+                totalKanjiLength += length;
                 splineLengths.Add(length);
             }
             currentDrawingPath = 0;
@@ -58,7 +60,8 @@ public class KanjiObject : MonoBehaviour {
             if (currentDrawingPath >= splineLengths.Count) {
                 currentDrawingPath = splineLengths.Count - 1;
             }
-            float currentDrawingSpeed = splineLengths[currentDrawingPath] / pathAnimationDuration;
+            float currentDrawingSpeed = totalKanjiLength / pathAnimationDuration;
+            //float currentDrawingSpeed = splineLengths[currentDrawingPath] / pathAnimationDuration;
             int p = 0;
             foreach (var path in paths) {
                 if (p > currentDrawingPath) {
@@ -66,17 +69,22 @@ public class KanjiObject : MonoBehaviour {
                     currentPathTravelledDistance = 0.0f;
                     break;
                 }
-                currentPathTravelledDistance += currentDrawingSpeed * Time.deltaTime;
+                if (p == currentDrawingPath) {
+                    currentPathTravelledDistance += currentDrawingSpeed * Time.deltaTime;
+                }
                 float distance = 0.0f;
 
                 bool isOverflow = false;
                 foreach (var spline in path) {
                     var line = lines[c];
-                    var pos = transform.position;
-                    pos.x += spline[0].x;
-                    pos.y -= spline[0].y;
+                    //var pos = transform.position;
+                    var kanjiPoint = new Vector4(spline[0].x, -spline[0].y, 0.0f, 1.0f);
+                    Vector3 newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
+
+                    //pos.x += spline[0].x;
+                    //pos.y -= spline[0].y;
                     line.positionCount = 1; //bad
-                    line.SetPosition(0, pos);
+                    line.SetPosition(0, newKanjiPos);
                     isOverflow = false;
                     int renderedPoints = 1;
                     for (int i = 1; i < spline.Count; ++i) {
@@ -88,11 +96,16 @@ public class KanjiObject : MonoBehaviour {
                             break;
                         }
                         distance += difDistance;
-                        pos = transform.position;
-                        pos.x += spline[i].x;
-                        pos.y -= spline[i].y;
-                        line.positionCount = i + 1; //bad
-                        line.SetPosition(i, pos);
+                        //pos = transform.position;
+                        kanjiPoint = new Vector4(spline[i].x, -spline[i].y, 0.0f, 1.0f);
+                        newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
+                        //pos.x += spline[i].x;
+                        //pos.y -= spline[i].y;
+
+                        if (line.positionCount < i + 1) {
+                            line.positionCount = i + 1; //bad
+                        }
+                        line.SetPosition(i, newKanjiPos);
                         renderedPoints += 1;
                     }
                     c++;
@@ -129,6 +142,11 @@ public class KanjiObject : MonoBehaviour {
 
     public void SetColor(UnityEngine.Color color) {
         this.color = color;
+    }
+
+    float CalculateDrawingSpeedDependingOnItsLength(float length, float time) {
+        //todo: make some adjustments to how line speed is calculated depending on it's length
+        return 0.0f;
     }
 
 }

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Linq;
 
 public class SplineKanjiAnimator {
-    private string kanjiDataPath = "Assets/Resources/kanjivgdata/kanjidata_simplified.xml"; //todo: propper path
+    private string kanjiDataPath = "Assets/CustomResources/kanjivgdata/kanjidata_simplified.xml"; //todo: propper path
     private Dictionary<string, List<SplinePath>> kanjiToSplines;
 
     public SplineKanjiAnimator() {
@@ -147,6 +147,8 @@ public class SplineKanjiAnimator {
                 kanjiToSplines.Add(element.Value, splines);
             }
         }
+        xmlDoc = null;
+        System.GC.Collect();
     }
 
     public GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji, UnityEngine.Color color) {
