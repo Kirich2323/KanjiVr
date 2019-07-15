@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    private DrawAnimatedKanji tmp;
     private SplineKanjiAnimator tmp2;
     void Start() {
         //tmp = new DrawAnimatedKanji();

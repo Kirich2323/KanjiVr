@@ -16,7 +16,7 @@ public class KanjiObject : MonoBehaviour {
 
     private float pathAnimationDuration = 5.0f;
     private List<float> splineLengths = null;
-    private int currentDrawingPath = -1;
+    private int currentDrawingPathIdx = -1;
     private float currentPathTravelledDistance = 0.0f;
     private UnityEngine.Color color;
     private float totalKanjiLength = 0.0f;
@@ -49,46 +49,44 @@ public class KanjiObject : MonoBehaviour {
                 totalKanjiLength += length;
                 splineLengths.Add(length);
             }
-            currentDrawingPath = 0;
+            currentDrawingPathIdx = 0;
             isInitialized = false;
             isRendering = true;
         }
 
         if (isRendering) {
-            int c = 0;
-            if (currentDrawingPath >= splineLengths.Count) {
-                currentDrawingPath = splineLengths.Count - 1;
+            int currentLine = 0;
+            if (currentDrawingPathIdx >= splineLengths.Count) {
+                currentDrawingPathIdx = splineLengths.Count - 1;
             }
             float currentDrawingSpeed = totalKanjiLength / pathAnimationDuration;
             //float currentDrawingSpeed = splineLengths[currentDrawingPath] / pathAnimationDuration;
 
-            int p = 0;
+            int patIdx = 0;
             foreach (var path in paths) {
-                if (p > currentDrawingPath) {
-                    currentDrawingPath = p;
-                    currentPathTravelledDistance = 0.0f;
+                if (patIdx > currentDrawingPathIdx) {
+                    DrawNextLine();
                     break;
                 }
-                if (p == currentDrawingPath) {
+                if (patIdx == currentDrawingPathIdx) {
                     currentPathTravelledDistance += currentDrawingSpeed * Time.deltaTime;
                 }
                 float distance = 0.0f;
 
                 bool isOverflow = false;
                 foreach (var spline in path) {
-                    var line = lines[c];
+                    var line = lines[currentLine];
                     var kanjiPoint = new Vector4(spline[0].x, -spline[0].y, 0.0f, 1.0f);
                     Vector3 newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
 
                     line.positionCount = 1; //bad
                     line.SetPosition(0, newKanjiPos);
                     isOverflow = false;
-                    int renderedPoints = 1;
                     for (int i = 1; i < spline.Count; ++i) {
                         float dx = spline[i].x - spline[i - 1].x;
                         float dy = spline[i].y - spline[i - 1].y;
                         float difDistance = Mathf.Sqrt(dx * dx + dy * dy);
-                        if (p == currentDrawingPath && distance + difDistance > currentPathTravelledDistance) {
+                        if (patIdx == currentDrawingPathIdx && distance + difDistance > currentPathTravelledDistance) {
                             isOverflow = true;
                             break;
                         }
@@ -100,9 +98,8 @@ public class KanjiObject : MonoBehaviour {
                             line.positionCount = i + 1; //bad
                         }
                         line.SetPosition(i, newKanjiPos);
-                        renderedPoints += 1;
                     }
-                    c++;
+                    currentLine++;
                     if (isOverflow) {
                         break;
                     }
@@ -110,10 +107,7 @@ public class KanjiObject : MonoBehaviour {
                 if (isOverflow) {
                     break;
                 }
-                p++;
-            }
-            if (p == paths.Count) {
-                p = 0;
+                patIdx++;
             }
         }
     }
@@ -141,6 +135,11 @@ public class KanjiObject : MonoBehaviour {
     float CalculateDrawingSpeedDependingOnItsLength(float length, float time) {
         //todo: make some adjustments to how line speed is calculated depending on it's length
         return 0.0f;
+    }
+
+    void DrawNextLine() {
+        currentDrawingPathIdx++;
+        currentPathTravelledDistance = 0.0f;
     }
 
 }
