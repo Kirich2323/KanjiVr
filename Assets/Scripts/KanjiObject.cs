@@ -26,8 +26,6 @@ public class KanjiObject : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        //Debug.Log(Time.deltaTime);
-        //Debug.Log(transform.right.ToString() + " -- " + transform.up.ToString());
         if (isInitialized) {
             splineLengths = new List<float>();
             foreach (var path in paths) {
@@ -42,12 +40,10 @@ public class KanjiObject : MonoBehaviour {
                     ngo.transform.parent = transform;
                     lines.Add(ngo.AddComponent<LineRenderer>());
                     var line = lines[lines.Count - 1];
-                    //line.positionCount = spline.Count;
                     line.positionCount = 0;
                     line.startWidth = .09f;
                     line.endWidth = .09f;
                     line.material = new Material(Shader.Find("Sprites/Default"));
-                    //line.material.color = UnityEngine.Color.red;
                     line.material.color = color;
                 }
                 splineLengths.Add(length);
@@ -62,10 +58,6 @@ public class KanjiObject : MonoBehaviour {
             if (currentDrawingPath >= splineLengths.Count) {
                 currentDrawingPath = splineLengths.Count - 1;
             }
-            //Debug.Log("Spline length count: " + splineLengths.Count);
-            //Debug.Log("Current drawing path: " + currentDrawingPath);
-            //Debug.Log("currentPathTravelledDistance: " + currentPathTravelledDistance);
-            //Debug.Log("Path count:" + paths.Count);
             float currentDrawingSpeed = splineLengths[currentDrawingPath] / pathAnimationDuration;
             int p = 0;
             foreach (var path in paths) {
@@ -81,8 +73,6 @@ public class KanjiObject : MonoBehaviour {
                 foreach (var spline in path) {
                     var line = lines[c];
                     var pos = transform.position;
-                    //var vx = new Vector3(spline[0].x, 0, 0);
-                    //var vy = new Vector3(0, -spline[0].y, 0);
                     pos.x += spline[0].x;
                     pos.y -= spline[0].y;
                     line.positionCount = 1; //bad
@@ -95,22 +85,16 @@ public class KanjiObject : MonoBehaviour {
                         float difDistance = Mathf.Sqrt(dx * dx + dy * dy);
                         if (p == currentDrawingPath && distance + difDistance > currentPathTravelledDistance) {
                             isOverflow = true;
-                            //Debug.Log("Overflown! Distance: " + (distance + difDistance));
                             break;
                         }
                         distance += difDistance;
                         pos = transform.position;
-                        //vx = new Vector3(spline[i].x, 0, 0);
-                        //vy = new Vector3(0, -spline[i].y, 0);
-                        //pos += Vector3.Scale(vx, transform.forward) + Vector3.Scale(vy, transform.up);
                         pos.x += spline[i].x;
                         pos.y -= spline[i].y;
-                        //pos *= Quaternion.Euler(transform.rotation.eulerAngles);
                         line.positionCount = i + 1; //bad
                         line.SetPosition(i, pos);
                         renderedPoints += 1;
                     }
-                    //Debug.Log("Path: " + p + ". Line: " + c + ". Distance: " + distance + ". PathDistance: " + currentPathTravelledDistance + ". MaxDistance: " + splineLengths[p] + ". Points: " + renderedPoints);
                     c++;
                     if (isOverflow) {
                         break;
