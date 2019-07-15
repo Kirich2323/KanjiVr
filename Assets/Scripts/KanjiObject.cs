@@ -20,12 +20,11 @@ public class KanjiObject : MonoBehaviour {
     private float currentPathTravelledDistance = 0.0f;
     private UnityEngine.Color color;
     private float totalKanjiLength = 0.0f;
-    // Start is called before the first frame update
+
     void Start() {
         lines = new List<LineRenderer>();
     }
 
-    // Update is called once per frame
     void Update() {
         if (isInitialized) {
             splineLengths = new List<float>();
@@ -62,6 +61,7 @@ public class KanjiObject : MonoBehaviour {
             }
             float currentDrawingSpeed = totalKanjiLength / pathAnimationDuration;
             //float currentDrawingSpeed = splineLengths[currentDrawingPath] / pathAnimationDuration;
+
             int p = 0;
             foreach (var path in paths) {
                 if (p > currentDrawingPath) {
@@ -77,12 +77,9 @@ public class KanjiObject : MonoBehaviour {
                 bool isOverflow = false;
                 foreach (var spline in path) {
                     var line = lines[c];
-                    //var pos = transform.position;
                     var kanjiPoint = new Vector4(spline[0].x, -spline[0].y, 0.0f, 1.0f);
                     Vector3 newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
 
-                    //pos.x += spline[0].x;
-                    //pos.y -= spline[0].y;
                     line.positionCount = 1; //bad
                     line.SetPosition(0, newKanjiPos);
                     isOverflow = false;
@@ -96,11 +93,8 @@ public class KanjiObject : MonoBehaviour {
                             break;
                         }
                         distance += difDistance;
-                        //pos = transform.position;
                         kanjiPoint = new Vector4(spline[i].x, -spline[i].y, 0.0f, 1.0f);
                         newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
-                        //pos.x += spline[i].x;
-                        //pos.y -= spline[i].y;
 
                         if (line.positionCount < i + 1) {
                             line.positionCount = i + 1; //bad
