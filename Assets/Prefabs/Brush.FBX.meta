@@ -1,8 +1,30 @@
 fileFormatVersion: 2
 guid: 1d7c623b8c00ea24f8e0788a150a7e66
 ModelImporter:
-  serializedVersion: 25
-  internalIDToNameTable: []
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: brush
+    100004: miAreaLight001
+    100006: miAreaLight001.Target
+    100008: Plane01
+    400000: //RootNode
+    400002: brush
+    400004: miAreaLight001
+    400006: miAreaLight001.Target
+    400008: Plane01
+    2100000: 01 - Default
+    2100002: 03 - Default
+    2100004: 02 - Default
+    2100006: No Name
+    2300000: brush
+    2300002: Plane01
+    3300000: brush
+    3300002: Plane01
+    4300000: brush
+    4300002: Plane01
+    9500000: //RootNode
+    10800000: miAreaLight001
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -45,19 +67,18 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
+    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
-    skinWeightsMode: 0
-    maxBonesPerVertex: 4
-    minBoneWeight: 0.001
-    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 0.0254
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -66,11 +87,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 3
+    serializedVersion: 2
     human: []
     skeleton: []
     armTwist: 0.5
@@ -80,7 +100,6 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
