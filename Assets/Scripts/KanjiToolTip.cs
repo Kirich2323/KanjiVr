@@ -188,6 +188,7 @@ public class KanjiToolTip : MonoBehaviour {
 
     protected virtual void DrawLine() {
         if (drawLineTo != null) {
+            transform.position = drawLineTo + new Vector3(0,0.5f,0);
             line.SetPosition(0, drawLineFrom.position);
             line.SetPosition(1, drawLineTo);
         }
