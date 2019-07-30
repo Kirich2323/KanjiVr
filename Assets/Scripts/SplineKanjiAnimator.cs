@@ -151,11 +151,11 @@ public class SplineKanjiAnimator {
         System.GC.Collect();
     }
 
-    public GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji, UnityEngine.Color color) {
+    public GameObject SpawnUninitializedKanji(Vector3 location, Vector3 rotation, string kanji, UnityEngine.Color color) {
         if (!kanjiToSplines.ContainsKey(kanji)) {
             return null;
         }
-        
+
         var go = new GameObject();
         var kanjiObject = go.AddComponent<KanjiObject>();
         kanjiObject.transform.parent = go.transform;
@@ -173,7 +173,7 @@ public class SplineKanjiAnimator {
                 //Debug.Log("Max points: " + KanjiObject.MAX_SPLINE_POINTS.ToString());
                 for (int i = 0; i < KanjiObject.MAX_SPLINE_POINTS; ++i) {
                     float t = (float)i / (float)(KanjiObject.MAX_SPLINE_POINTS - 1);
-                    var point = scale*CalculateCubicBezierPoint(t, spline.A, spline.B, spline.C, spline.D);
+                    var point = scale * CalculateCubicBezierPoint(t, spline.A, spline.B, spline.C, spline.D);
                     line.Add(point);
                 }
                 //Debug.Log("Line from sender: " + line.Count.ToString());
@@ -183,9 +183,22 @@ public class SplineKanjiAnimator {
         }
         kanjiObject.SetPaths(kanjiPaths);
         kanjiObject.SetColor(color);
-        kanjiObject.SetInitialized();
 
         go.transform.Rotate(rotation);// = Quaternion.Euler(rotation);
+        return go;
+    }
+
+    public GameObject SpawnAnimatedKanji(Vector3 location, Vector3 rotation, string kanji, UnityEngine.Color color) {
+        var go = SpawnUninitializedKanji(location, rotation, kanji, color);
+        go.GetComponent<KanjiObject>().SetInitialized();
+        return go;
+    }
+
+    public GameObject SpawnStaticKanji(Vector3 location, Vector3 rotation, string kanji, UnityEngine.Color color) {
+        var go = SpawnUninitializedKanji(location, rotation, kanji, color);
+        var kanjiObject = go.GetComponent<KanjiObject>();
+        kanjiObject.SetDrawingType(DrawingType.Static);
+        kanjiObject.SetInitialized();
         return go;
     }
 

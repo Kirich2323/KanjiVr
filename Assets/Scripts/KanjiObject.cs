@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum DrawingType {
+    Static,
+    AnimatedAlltogether,
+    AnimatedLineByLine,
+    AnimatedLooped
+}
+
 public class KanjiObject : MonoBehaviour {
 
     public static int MAX_SPLINE_POINTS = 50;
@@ -17,9 +24,10 @@ public class KanjiObject : MonoBehaviour {
     private float pathAnimationDuration = 5.0f;
     private List<float> splineLengths = null;
     private int currentDrawingPathIdx = -1;
-    private float currentPathTravelledDistance = 0.0f;
+    private float currentPathDistanceCap = 0.0f;
     private UnityEngine.Color color;
     private float totalKanjiLength = 0.0f;
+    private DrawingType drawingType = DrawingType.AnimatedAlltogether;
 
     void Start() {
         lines = new List<LineRenderer>();
@@ -55,42 +63,43 @@ public class KanjiObject : MonoBehaviour {
         }
 
         if (isRendering) {
-            int currentLine = 0;
+            
             if (currentDrawingPathIdx >= splineLengths.Count) {
                 currentDrawingPathIdx = splineLengths.Count - 1;
             }
             float currentDrawingSpeed = totalKanjiLength / pathAnimationDuration;
             //float currentDrawingSpeed = splineLengths[currentDrawingPath] / pathAnimationDuration;
 
-            int patIdx = 0;
+            int currentPathIdx = 0;
+            int currentSpline = 0;
             foreach (var path in paths) {
-                if (patIdx > currentDrawingPathIdx) {
+                if (currentPathIdx > currentDrawingPathIdx) {
                     DrawNextLine();
                     break;
                 }
-                if (patIdx == currentDrawingPathIdx) {
-                    currentPathTravelledDistance += currentDrawingSpeed * Time.deltaTime;
+                if (currentPathIdx == currentDrawingPathIdx) {
+                    currentPathDistanceCap += currentDrawingSpeed * Time.deltaTime;
                 }
-                float distance = 0.0f;
 
-                bool isOverflow = false;
+                float pathDistance = 0.0f;
+                bool hasOverflown = false;
                 foreach (var spline in path) {
-                    var line = lines[currentLine];
+                    var line = lines[currentSpline];
                     var kanjiPoint = new Vector4(spline[0].x, -spline[0].y, 0.0f, 1.0f);
                     Vector3 newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
 
                     line.positionCount = 1; //bad
                     line.SetPosition(0, newKanjiPos);
-                    isOverflow = false;
+                    hasOverflown = false;
                     for (int i = 1; i < spline.Count; ++i) {
                         float dx = spline[i].x - spline[i - 1].x;
                         float dy = spline[i].y - spline[i - 1].y;
                         float difDistance = Mathf.Sqrt(dx * dx + dy * dy);
-                        if (patIdx == currentDrawingPathIdx && distance + difDistance > currentPathTravelledDistance) {
-                            isOverflow = true;
+                        if (currentPathIdx == currentDrawingPathIdx && pathDistance + difDistance > currentPathDistanceCap) {
+                            hasOverflown = true;
                             break;
                         }
-                        distance += difDistance;
+                        pathDistance += difDistance;
                         kanjiPoint = new Vector4(spline[i].x, -spline[i].y, 0.0f, 1.0f);
                         newKanjiPos = transform.localToWorldMatrix * kanjiPoint;
 
@@ -99,15 +108,15 @@ public class KanjiObject : MonoBehaviour {
                         }
                         line.SetPosition(i, newKanjiPos);
                     }
-                    currentLine++;
-                    if (isOverflow) {
+                    currentSpline++;
+                    if (hasOverflown) {
                         break;
                     }
                 }
-                if (isOverflow) {
+                if (hasOverflown) {
                     break;
                 }
-                patIdx++;
+                currentPathIdx++;
             }
         }
     }
@@ -132,6 +141,10 @@ public class KanjiObject : MonoBehaviour {
         this.color = color;
     }
 
+    public void SetDrawingType(DrawingType type) {
+        drawingType = type;
+    }
+
     float CalculateDrawingSpeedDependingOnItsLength(float length, float time) {
         //todo: make some adjustments to how line speed is calculated depending on it's length
         return 0.0f;
@@ -139,7 +152,11 @@ public class KanjiObject : MonoBehaviour {
 
     void DrawNextLine() {
         currentDrawingPathIdx++;
-        currentPathTravelledDistance = 0.0f;
+        currentPathDistanceCap = 0.0f;
+    }
+
+    void DrawTillDistance(float distance) {
+
     }
 
 }

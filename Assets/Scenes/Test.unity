@@ -4145,6 +4145,26 @@ PrefabInstance:
       propertyPath: displayText
       value: "\u6728"
       objectReference: {fileID: 0}
+    - target: {fileID: 1307264894804735732, guid: db8b218edc8875f48a1f90877e3cf3d6,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1307264894804735732, guid: db8b218edc8875f48a1f90877e3cf3d6,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1307264894804837882, guid: db8b218edc8875f48a1f90877e3cf3d6,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1307264894804837882, guid: db8b218edc8875f48a1f90877e3cf3d6,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db8b218edc8875f48a1f90877e3cf3d6, type: 3}
 --- !u!1 &1624250257
