@@ -6,6 +6,7 @@ using VRTK;
 public class KanjiToolTipToggler : MonoBehaviour {
 
     public VRTK_DestinationMarker pointer;
+    private KanjiToolTip kanjiToolTip;
 
     // Start is called before the first frame update
     void OnEnable() {
@@ -37,6 +38,8 @@ public class KanjiToolTipToggler : MonoBehaviour {
     }
 
     private void DestinationMarkerHover(object sender, DestinationMarkerEventArgs e) {
+        Debug.Log(e.destinationPosition);
+        kanjiToolTip.setDrawLineTo(e.destinationPosition);
     }
 
     protected virtual void DestinationMarkerExit(object sender, DestinationMarkerEventArgs e) {
@@ -50,7 +53,7 @@ public class KanjiToolTipToggler : MonoBehaviour {
     protected virtual void ShowToolTip(Transform target) {
         KanjiToolTip tooltip = (target != null ? target.GetComponentInChildren<KanjiToolTip>() : null);
         if (tooltip != null) {
-            Debug.Log("Found tooltip");
+            kanjiToolTip = tooltip;
             tooltip.Show();
         }
     }
@@ -58,7 +61,6 @@ public class KanjiToolTipToggler : MonoBehaviour {
     protected virtual void HideToolTip(Transform target) {
         KanjiToolTip tooltip = (target != null ? target.GetComponentInChildren<KanjiToolTip>() : null);
         if (tooltip != null) {
-            Debug.Log("Found tooltip 2");
             tooltip.Hide();
         }
     }

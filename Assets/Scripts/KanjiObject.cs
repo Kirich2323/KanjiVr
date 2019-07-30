@@ -63,7 +63,7 @@ public class KanjiObject : MonoBehaviour {
         }
 
         if (isRendering) {
-            
+
             if (currentDrawingPathIdx >= splineLengths.Count) {
                 currentDrawingPathIdx = splineLengths.Count - 1;
             }
@@ -158,5 +158,4 @@ public class KanjiObject : MonoBehaviour {
     void DrawTillDistance(float distance) {
 
     }
-
 }

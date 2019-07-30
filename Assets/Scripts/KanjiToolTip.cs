@@ -39,7 +39,7 @@ public class KanjiToolTip : MonoBehaviour {
     [Tooltip("An optional transform of where to start drawing the line from. If one is not provided the centre of the tooltip is used for the initial line position.")]
     public Transform drawLineFrom;
     [Tooltip("A transform of another object in the scene that a line will be drawn from the tooltip to, this helps denote what the tooltip is in relation to. If no transform is provided and the tooltip is a child of another object, then the parent object's transform will be used as this destination position.")]
-    public Transform drawLineTo;
+    public Vector3 drawLineTo;
     [Tooltip("The width of the line drawn between the tooltip and the destination transform.")]
     public float lineWidth = 0.05f;
     [Tooltip("The colour to use for the text on the tooltip.")]
@@ -84,7 +84,7 @@ public class KanjiToolTip : MonoBehaviour {
         SetText("UITextReverse");
         SetLine();
         if (drawLineTo == null && transform.parent != null) {
-            drawLineTo = transform.parent;
+            drawLineTo = transform.parent.position;
         }
         OnObjectTooltipReset(SetEventPayload());
     }
@@ -97,6 +97,10 @@ public class KanjiToolTip : MonoBehaviour {
         displayText = newText;
         OnObjectTooltipTextUpdated(SetEventPayload(newText));
         ResetTooltip();
+    }
+
+    public void setDrawLineTo(Vector3 to) {
+        drawLineTo = to;
     }
 
     public void Show() {
@@ -185,7 +189,7 @@ public class KanjiToolTip : MonoBehaviour {
     protected virtual void DrawLine() {
         if (drawLineTo != null) {
             line.SetPosition(0, drawLineFrom.position);
-            line.SetPosition(1, drawLineTo.position);
+            line.SetPosition(1, drawLineTo);
         }
     }
 }
